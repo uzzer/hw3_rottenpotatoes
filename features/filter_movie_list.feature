@@ -5,7 +5,6 @@ Feature: display list of movies filtered by MPAA rating
   I want to see movies matching only certain MPAA ratings
 
 Background: movies have been added to database
-
   Given the following movies exist:
   | title                   | rating | release_date |
   | Aladdin                 | G      | 25-Nov-1992  |
@@ -18,18 +17,24 @@ Background: movies have been added to database
   | The Incredibles         | PG     | 5-Nov-2004   |
   | Raiders of the Lost Ark | PG     | 12-Jun-1981  |
   | Chicken Run             | G      | 21-Jun-2000  |
-
   And  I am on the RottenPotatoes home page
   
 Scenario: restrict to movies with 'PG' or 'R' ratings
-  # enter step(s) to check the 'PG' and 'R' checkboxes
-  # enter step(s) to uncheck all other checkboxes
+  Given I check the following ratings: PG, R
+  Given I uncheck the following ratings: G, PG-13, NC-17
   # enter step to "submit" the search form on the homepage
+  When I press "Refresh"
   # enter step(s) to ensure that PG and R movies are visible
+  Then I should see /The Incredibles/
   # enter step(s) to ensure that other movies are not visible
+  Then I should not see /Aladdin/
 
 Scenario: no ratings selected
-  # see assignment
+  Given I uncheck the following ratings: PG, R, G, PG-13, NC-17
+  When I press "Refresh"
+  Then Then I should see all of the movies
 
 Scenario: all ratings selected
-  # see assignment
+  Given I check the following ratings: PG, R, G, PG-13, NC-17
+  When I press "Refresh"
+  Then Then I should see all of the movies
